@@ -80,7 +80,8 @@ local function get_diff(filename, cwd)
 
 	local s = sr.stdout or ""
 	if s == "" then return nil, "clean" end
-	if s:sub(1, 2):find("?") then return nil, "untracked" end
+	-- Treat lines starting with '??' as untracked files from 'git status --porcelain'
+	if s:match("^%?%?") then return nil, "untracked" end
 
 	-- Get unstaged diff
 	local dr, derr = Command("git")
