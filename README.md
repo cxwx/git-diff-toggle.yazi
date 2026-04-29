@@ -8,6 +8,7 @@ Press a key to switch to git diff mode -- modified files show `git diff` output 
 
 - yazi >= 25.5.31
 - git
+- delta (optional, for prettier colored diffs when available)
 
 ## Installation
 
@@ -24,6 +25,15 @@ Clone this repository into your yazi plugins directory:
 ```bash
 git clone https://github.com/cxwx/git-diff-toggle.yazi.git ~/.config/yazi/plugins/git-diff-toggle.yazi
 ```
+
+### Optional: delta (prettier diffs)
+
+This plugin will pipe git diff output through `delta` (a.k.a. git-delta) when it is available in your PATH to produce nicer, colored diffs in the preview. Install example:
+
+- Homebrew (macOS): `brew install git-delta`
+
+See https://github.com/dandavison/delta for installation instructions on other platforms.
+
 
 ## Configuration
 
