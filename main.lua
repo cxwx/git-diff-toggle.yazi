@@ -117,13 +117,15 @@ local function get_diff(filename, cwd)
 	local use_delta = delta_available(cwd)
 	if use_delta then
 		-- Prefer running git and piping through delta for prettier output
-		local cmd = "git --no-optional-locks diff --color=always -U3 -- " .. shell_escape(filename) .. " | delta --color-only --paging=never"
-		local out, kind, err = run_shell_cmd(cmd, cwd)
+		local cmd = "git --no-optional-locks diff --color=always -U3 -- " .. shell_escape(filename)
+		cmd = cmd .. " | delta --color-only --paging=never"
+		local out = select(1, run_shell_cmd(cmd, cwd))
 		if out and out ~= "" then return out, "diff" end
 
 		-- Try staged diff
-		cmd = "git --no-optional-locks diff --cached --color=always -U3 -- " .. shell_escape(filename) .. " | delta --color-only --paging=never"
-		out, kind, err = run_shell_cmd(cmd, cwd)
+		cmd = "git --no-optional-locks diff --cached --color=always -U3 -- " .. shell_escape(filename)
+		cmd = cmd .. " | delta --color-only --paging=never"
+		out = select(1, run_shell_cmd(cmd, cwd))
 		if out and out ~= "" then return out, "staged" end
 
 		return nil, "clean"
