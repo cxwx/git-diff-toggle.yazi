@@ -88,6 +88,19 @@ Fixed by Copilot
 
 Only works for files yazi detects as `text/*` mime type. Binary files, images, etc. use their default previewers.
 
+## Roadmap
+
+Planned improvements (not implemented yet):
+
+- Hunk navigation and apply — navigate hunks in the preview and stage/apply single hunks from the UI.
+- Toggle and show unstaged/staged — explicit commands to switch between unstaged and staged diffs and a status indicator.
+- Intraline word/line highlighting — word-level diff highlighting (git --word-diff or delta intraline).
+- Blame/annotation view — show git blame for the current line in the preview or a side pane.
+- External viewer for large diffs — open very large diffs in a pager or external viewer to avoid UI overload.
+- Configuration options — expose settings for context lines, theme, force delta, and max diff size.
+- Asynchronous diff generation — run diffs asynchronously and display a loading indicator.
+- Worktree & submodule support — detect and correctly handle files in git worktrees and submodules.
+
 ## Credits
 
 This plugin was developed with [MiMo](https://github.com/XiaomiMiMo/MiMo), an AI model by Xiaomi.
