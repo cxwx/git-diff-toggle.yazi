@@ -63,6 +63,35 @@ local function peek_normal(job)
 end
 
 -- Get diff for a file, cache result in plugin state
+local function shell_escape(s)
+	return "'" .. tostring(s):gsub("'", "'\\''") .. "'"
+end
+
+local function delta_available(cwd)
+	-- Use a shell check to detect delta in PATH
+	local res = Command("sh")
+		:arg({ "-lc", "command -v delta >/dev/null 2>&1 && echo yes || echo no" })
+		:cwd(cwd)
+		:stdout(Command.PIPED)
+		:stderr(Command.PIPED)
+		:output()
+	if not res then return false end
+	local out = res.stdout or ""
+	return out:match("yes") ~= nil
+end
+
+local function run_shell_cmd(cmd, cwd)
+	local dr, derr = Command("sh")
+		:arg({ "-lc", cmd })
+		:cwd(cwd)
+		:stdout(Command.PIPED)
+		:stderr(Command.PIPED)
+		:output()
+	if not dr then return nil, "error", derr end
+	if dr.status and dr.status.code ~= 0 then return nil, "error", dr.stderr or "" end
+	return dr.stdout or "", "diff"
+end
+
 local function get_diff(filename, cwd)
 	-- Check status first
 	local sr, err = Command("git")
@@ -85,6 +114,22 @@ local function get_diff(filename, cwd)
 	-- Treat lines starting with '??' as untracked files from 'git status --porcelain'
 	if s:match("^%?%?") then return nil, "untracked" end
 
+	local use_delta = delta_available(cwd)
+	if use_delta then
+		-- Prefer running git and piping through delta for prettier output
+		local cmd = "git --no-optional-locks diff --color=always -U3 -- " .. shell_escape(filename) .. " | delta --color-only --paging=never"
+		local out, kind, err = run_shell_cmd(cmd, cwd)
+		if out and out ~= "" then return out, "diff" end
+
+		-- Try staged diff
+		cmd = "git --no-optional-locks diff --cached --color=always -U3 -- " .. shell_escape(filename) .. " | delta --color-only --paging=never"
+		out, kind, err = run_shell_cmd(cmd, cwd)
+		if out and out ~= "" then return out, "staged" end
+
+		return nil, "clean"
+	end
+
+	-- Fallback: run git directly (no delta)
 	-- Get unstaged diff
 	local dr, derr = Command("git")
 		:arg({ "diff", "--color=always", "-U3", "--", filename })
