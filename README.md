@@ -70,8 +70,23 @@ Diff results are cached per file -- navigating back to the same file won't re-ru
 
 ## Known Issues
 
-- yazi's `Command` API may leave zombie processes on exit. This is a [known yazi issue](https://github.com/sxyazi/yazi/issues). The plugin caches results to minimize `Command` calls.
-- Only works for files yazi detects as `text/*` mime type. Binary files, images, etc. use their default previewers.
+### Zombie processes on exit
+
+yazi's `Command` API (`Command():output()`, `Command():spawn()`) may leave zombie `git` processes when yazi exits. Every toggle or file hover that triggers a `Command` call can produce a lingering process. This affects **all yazi plugins** that spawn external commands, not just this one.
+
+Workarounds:
+- The plugin caches diff results per file to minimize `Command` calls
+- After exiting yazi, you can clean up zombies: `pkill -f "git.*diff"` or just wait for them to be reaped
+
+Related: [yazi#3289](https://github.com/sxyazi/yazi/issues/3289), [yazi#2681](https://github.com/sxyazi/yazi/issues/2681)
+
+### Text files only
+
+Only works for files yazi detects as `text/*` mime type. Binary files, images, etc. use their default previewers.
+
+## Credits
+
+This plugin was developed with [MiMo](https://github.com/XiaomiMiMo/MiMo), an AI model by Xiaomi.
 
 ## License
 
