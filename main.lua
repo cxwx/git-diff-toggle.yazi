@@ -113,6 +113,7 @@ local function get_diff(filename, cwd)
 end
 
 function M:peek(job)
+	local _ = self
 	local enabled = get_state("enabled")
 	if not enabled then
 		return peek_normal(job)
@@ -159,6 +160,7 @@ function M:peek(job)
 end
 
 function M:seek(job)
+	local _ = self
 	local enabled = get_state("enabled")
 	if not enabled then
 		local ok, code = pcall(require, "code")
@@ -173,6 +175,7 @@ function M:seek(job)
 end
 
 function M:entry(_)
+	local _ = self
 	local enabled = not get_state("enabled")
 	set_state("enabled", enabled)
 	-- Clear cache on toggle
