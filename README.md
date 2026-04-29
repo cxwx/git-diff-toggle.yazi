@@ -14,7 +14,7 @@ Press a key to switch to git diff mode -- modified files show `git diff` output 
 ### Using [ya pack](https://yazi-rs.github.io/docs/plugins#installing-plugins)
 
 ```bash
-ya pack -a cxwx/git-diff-toggle
+ya pkg add cxwx/git-diff-toggle
 ```
 
 ### Manual
