@@ -1,6 +1,8 @@
 -- git-diff-toggle.yazi
 -- Toggle between git diff and normal file preview
 
+-- luacheck: globals ya ui cx Command
+
 local M = {}
 
 local set_state = ya.sync(function(st, key, value) st[key] = value end)
