@@ -70,15 +70,9 @@ Diff results are cached per file -- navigating back to the same file won't re-ru
 
 ## Known Issues
 
-### Zombie processes on exit
+### ~~Zombie processes on exit~~
 
-yazi's `Command` API (`Command():output()`, `Command():spawn()`) may leave zombie `git` processes when yazi exits. Every toggle or file hover that triggers a `Command` call can produce a lingering process. This affects **all yazi plugins** that spawn external commands, not just this one.
-
-Workarounds:
-- The plugin caches diff results per file to minimize `Command` calls
-- After exiting yazi, you can clean up zombies: `pkill -f "git.*diff"` or just wait for them to be reaped
-
-Related: [yazi#3289](https://github.com/sxyazi/yazi/issues/3289), [yazi#2681](https://github.com/sxyazi/yazi/issues/2681)
+Fixed by Copilot
 
 ### Text files only
 
